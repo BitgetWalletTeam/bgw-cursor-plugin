@@ -47,13 +47,7 @@ scripts/                      — Python CLI tools from bitget-wallet-skill
 
 ## MCP Tools
 
-When `bitget-wallet-mcp` is configured, these tools are available:
-- `bgw_swap` — Execute token swap
-- `bgw_check_token` — Check token safety
-- `bgw_get_balance` — Query token balances
-- `bgw_get_supported_chains` — List supported chains
-
-Set `BGW_API_KEY` and `BGW_API_SECRET` in your environment before using.
+When `bitget-wallet-mcp` is configured (via `.mcp.json`), 36 tools are available across Market Data (21), Smart Money (1), RWA Stock Trading (6), Swap (7), and Balance (1). No API key required — uses SHA256 hash signing (BKHmacAuth).
 
 ## Supported Chains
 

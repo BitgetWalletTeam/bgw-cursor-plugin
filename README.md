@@ -33,13 +33,7 @@
    git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git .bitget-wallet
    ```
 
-2. Set environment variables for MCP:
-   ```bash
-   export BGW_API_KEY="your-api-key"
-   export BGW_API_SECRET="your-api-secret"
-   ```
-
-3. Cursor auto-discovers the plugin from `.cursor-plugin/plugin.json`.
+2. Cursor auto-discovers the plugin from `.cursor-plugin/plugin.json`.
 
 4. (Optional) To use Python CLI scripts for swap execution:
    ```bash
@@ -111,14 +105,15 @@ reviews/                   # Audit & review artifacts (not part of plugin)
 
 ## MCP Tools
 
-When the `bitget-wallet-mcp` server is running:
+The `bitget-wallet-mcp` server provides **36 tools** across 5 categories. No API key required — uses SHA256 hash signing (BKHmacAuth).
 
-| Tool | Description |
-|------|-------------|
-| `bgw_swap` | Execute token swap (same-chain or cross-chain) |
-| `bgw_check_token` | Check if a token is safe to trade |
-| `bgw_get_balance` | Query token balances for an address |
-| `bgw_get_supported_chains` | List all supported chains |
+| Category | Tools | Examples |
+|----------|-------|---------|
+| Market Data | 21 | `token_info`, `search_tokens`, `kline`, `security_audit`, `rankings` |
+| Smart Money | 1 | `smart_money_addresses` |
+| RWA Stock Trading | 6 | `rwa_ticker_list`, `rwa_stock_info`, `rwa_order_price` |
+| Swap | 7 | `swap_quote`, `swap_confirm`, `swap_make_order`, `swap_send` |
+| Balance | 1 | `balance` |
 
 Install:
 ```bash

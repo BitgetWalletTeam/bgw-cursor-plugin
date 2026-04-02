@@ -61,7 +61,7 @@ ln -s "$REPO_ROOT" .bitget-wallet
 ### What Is NOT Tested
 
 - Live swap execution (requires real funds)
-- MCP server integration (requires `uv` + API Key + Secret)
+- MCP server integration (requires `uv`)
 - x402 real payment (requires funded wallet)
 - Social Login Wallet TEE signing (requires Bitget account session)
 
