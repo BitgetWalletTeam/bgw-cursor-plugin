@@ -1,0 +1,28 @@
+---
+description: Ensure Bitget Wallet provider namespace is used correctly in generated code. Applies when generating DApp code that connects to Bitget Wallet.
+alwaysApply: true
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+---
+
+When generating code that interacts with Bitget Wallet:
+
+- Use `window.bitkeep.ethereum` for EVM chains, NOT `window.ethereum`
+- Use `window.bitkeep.solana` for Solana, NOT `window.solana`
+- Use `window.bitkeep.unisat` for Bitcoin
+- Use `window.bitkeep.ton` for TON
+- Use `window.bitkeep.aptos` for Aptos
+- Use `window.bitkeep.keplr` for Cosmos
+- Use `window.bitkeep.tronWeb` for Tron
+- Use `window.bitkeep.suiWallet` for Sui
+
+Always check provider existence before use:
+
+```typescript
+if (typeof window.bitkeep !== 'undefined') {
+  const provider = window.bitkeep.ethereum;
+}
+```
+
+For EIP-6963 compatible detection, dispatch `eip6963:requestProvider` event and filter by `rdns: "com.bitget.web3"`.
+
+When using adapter frameworks (Wagmi, RainbowKit), import from `@bitget-wallet/web3-sdk` or configure the Bitget Wallet connector explicitly.

@@ -1,0 +1,12 @@
+.env
+.env.local
+.social-wallet-secret
+.DS_Store
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+.vscode/
+.idea/
+/tmp/
+*.tmp

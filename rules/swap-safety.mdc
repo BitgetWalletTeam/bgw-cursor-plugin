@@ -1,0 +1,15 @@
+---
+description: Swap operation safety rules when using Bitget Wallet Agent API or MCP tools. Prevents incorrect amounts, unsafe tokens, and unauthorized transactions.
+alwaysApply: true
+globs: ["**/*.py", "**/*.ts", "**/*.js"]
+---
+
+- Swap amounts are **human-readable**: pass `0.1` for 0.1 USDT, NOT wei/lamports/smallest unit
+- The `toAmount` in API responses is also human-readable
+- Always call `check-swap-token` (or `bgw_check_token` MCP tool) before swap to detect forbidden-buy tokens
+- Always show quote details (route, slippage, estimated output, gas) to user before confirming
+- Never sign transactions without explicit user confirmation (human-in-the-loop)
+- Use chain codes exactly: `sol` (not `solana`), `bnb` (not `bsc`), `eth` (not `ethereum`), `base`, `arbitrum`, `matic`, `morph`, `trx` (not `tron`)
+- Gasless mode (`feature: no_gas`): gas is deducted from the input token, no native token balance needed
+- For cross-chain swaps: verify both source and destination chain are supported before quoting
+- Always check order status after send — poll `getSwapOrder` until terminal state (success/failed)

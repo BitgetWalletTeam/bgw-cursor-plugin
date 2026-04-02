@@ -1,0 +1,37 @@
+{
+  "name": "bitget-wallet",
+  "displayName": "Bitget Wallet",
+  "version": "1.0.0",
+  "description": "Multi-chain DeFi tools & DApp code generation for Bitget Wallet — swap, bridge, token analysis across 8+ chains",
+  "author": {
+    "name": "Bitget Wallet AI Lab",
+    "email": "AiAgent@bitget.com"
+  },
+  "homepage": "https://web3.bitget.com",
+  "repository": "https://github.com/bitget-wallet-ai-lab/bitget-wallet",
+  "license": "MIT",
+  "logo": "assets/logo.svg",
+  "keywords": [
+    "web3",
+    "defi",
+    "wallet",
+    "multi-chain",
+    "swap",
+    "dapp",
+    "bitget-wallet",
+    "ai-agent",
+    "cursor",
+    "claude-code"
+  ],
+  "tags": [
+    "developer-tools",
+    "web3",
+    "defi",
+    "wallet",
+    "multi-chain"
+  ],
+  "skills": "./skills/",
+  "rules": "./rules/",
+  "agents": "./agents/",
+  "mcpServers": ".mcp.json"
+}

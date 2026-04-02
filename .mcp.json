@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "bitget-wallet-mcp": {
+      "command": "uvx",
+      "args": ["bitget-wallet-mcp"],
+      "env": {
+        "BGW_API_KEY": "${BGW_API_KEY}",
+        "BGW_API_SECRET": "${BGW_API_SECRET}"
+      }
+    }
+  }
+}
