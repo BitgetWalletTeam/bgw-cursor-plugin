@@ -151,7 +151,7 @@ This plugin uses a **progressive disclosure** pattern:
 ## Links
 
 - [Bitget Wallet](https://web3.bitget.com)
-- [Wallet Skill (171 stars)](https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill)
+- [Wallet Skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill)
 - [Developer Skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill)
 - [Wallet MCP Server](https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp)
 - [Partner Skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-partner-skill)

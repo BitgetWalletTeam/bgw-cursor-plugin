@@ -77,14 +77,17 @@ Gas mode decision at Step 1:
 - Native balance sufficient → `--feature user_gas` (preferred)
 - Native balance near zero → `--feature no_gas` (gasless, requires swap ≥ ~$5 USD)
 
-## MCP Tools (when available)
+## MCP Tools (when bitget-wallet-mcp is configured)
 
-| Tool | Use For |
-|------|---------|
-| `bgw_swap` | Execute full swap flow |
-| `bgw_check_token` | Check token safety before swap |
-| `bgw_get_balance` | Query token balances |
-| `bgw_get_supported_chains` | List supported chains |
+36 tools across 5 categories. No API key required — SHA256 hash signing.
+
+| Category | Key Tools | Use For |
+|----------|-----------|---------|
+| Swap (7) | `swap_quote`, `swap_confirm`, `swap_make_order`, `swap_send`, `swap_get_order_details`, `check_swap_token`, `get_token_list` | Full swap lifecycle |
+| Balance (1) | `balance` | Query token balances |
+| Market Data (21) | `token_info`, `search_tokens`, `security_audit`, `rankings`, ... | Token discovery and analysis |
+| Smart Money (1) | `smart_money_addresses` | KOL/smart money address discovery |
+| RWA (6) | `rwa_ticker_list`, `rwa_stock_info`, `rwa_order_price`, ... | RWA stock trading |
 
 When MCP tools are available, prefer them over CLI scripts.
 

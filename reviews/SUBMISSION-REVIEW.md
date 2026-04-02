@@ -181,8 +181,8 @@ Each `SKILL.md` is a lightweight router (50–241 lines) that maps user intents 
 ### Dual Execution Path
 
 ```
-Path A: MCP (preferred)
-  Agent → bgw_swap / bgw_check_token / bgw_get_balance → Bitget Wallet API
+Path A: MCP (preferred, 36 tools, no API key)
+  Agent → swap_quote / check_swap_token / balance / ... → Bitget Wallet API
 
 Path B: Python CLI (fallback)
   Agent → scripts/bitget-wallet-agent-api.py → Bitget Wallet API
@@ -294,7 +294,7 @@ Every file in this plugin traces back to a specific source repository on GitHub:
 | Item | Expected Value | Files Where Verified |
 |------|---------------|---------------------|
 | Chain codes | `eth, sol, bnb, base, arbitrum, matic, morph, trx` | defi-trading SKILL.md, swap.md, swap-safety.mdc, commands.md, CLAUDE.md |
-| MCP tools | `bgw_swap, bgw_check_token, bgw_get_balance, bgw_get_supported_chains` | defi-trading SKILL.md, README.md, CLAUDE.md, defi-operator.md, swap-safety.mdc |
+| MCP tools (swap) | `swap_quote, swap_confirm, swap_make_order, swap_send, check_swap_token, balance` | defi-trading SKILL.md, README.md, CLAUDE.md, defi-operator.md, swap-safety.mdc |
 | Token analysis tools | `bgw_token_find, bgw_token_check, bgw_token_analyze, bgw_address_find` | token-analysis SKILL.md, market-data.md, token-analyze.md, address-find.md |
 | Script paths | `scripts/<name>.py` | SKILL.md files, commands.md, CLAUDE.md |
 | Feature flags | `user_gas` (user pays), `no_gas` (gasless) | swap.md, swap-safety.mdc, defi-trading SKILL.md, bitget-wallet-agent-api.py |

@@ -1,6 +1,6 @@
 # Bitget Wallet Cursor Plugin — Acceptance Test Plan
 
-> Version: 1.2
+> Version: 1.3
 > Date: 2026-03-31
 > Repository: `bgw-cursor-plugin`
 > Plugin Version: 1.0.0
@@ -566,6 +566,44 @@ for ref in swap.md wallet-signing.md commands.md first-time-setup.md; do
 done
 ```
 
+#### T4.6 — Upstream sync: MCP tool names match live documentation
+
+Fetch the latest `bitget-wallet-mcp` README and verify that MCP tool names referenced in the plugin match the upstream source of truth.
+
+```bash
+curl -s https://raw.githubusercontent.com/bitget-wallet-ai-lab/bitget-wallet-mcp/main/README.md -o /tmp/mcp-readme.md
+# Verify key swap tools exist in upstream
+for tool in swap_quote swap_confirm swap_make_order swap_send check_swap_token balance; do
+  if grep -q "$tool" /tmp/mcp-readme.md; then
+    echo "T4.6 $tool PASS"
+  else
+    echo "T4.6 $tool FAIL — not found in upstream MCP README"
+  fi
+done
+```
+
+**Pass criteria:**
+- All MCP tool names referenced in `defi-trading/SKILL.md`, `agents/defi-operator.md`, and `rules/swap-safety.mdc` appear in the upstream README
+- No `BGW_API_KEY` or `BGW_API_SECRET` references in `.mcp.json`
+
+#### T4.7 — Upstream sync: MCP authentication model
+
+Verify the plugin's MCP auth description matches upstream.
+
+```bash
+# Check .mcp.json has no API key env vars
+python3 -c "
+import json
+d = json.load(open('.mcp.json'))
+env = d.get('mcpServers', {}).get('bitget-wallet-mcp', {}).get('env', {})
+assert 'BGW_API_KEY' not in env, 'Stale BGW_API_KEY in .mcp.json'
+assert 'BGW_API_SECRET' not in env, 'Stale BGW_API_SECRET in .mcp.json'
+print('T4.7 .mcp.json PASS — no API key env vars')
+"
+# Check upstream confirms no-key auth
+grep -q "No API key required" /tmp/mcp-readme.md && echo "T4.7 upstream PASS" || echo "T4.7 upstream FAIL"
+```
+
 ---
 
 ## Verdict Criteria
@@ -575,7 +613,7 @@ done
 | Level 1: Structural | T1.1–T1.8 | 100% | Yes — any failure blocks submission |
 | Level 2: CLI Smoke | T2.1–T2.12 | 100% for T2.1; 80% for T2.2–T2.12 (API may be rate-limited) | T2.1 blocks; others are advisory |
 | Level 3: Knowledge | T3.1–T3.9 | 100% for pass criteria checkboxes | Yes — core plugin value |
-| Level 4: Consistency | T4.1–T4.5 | 100% | Yes — documentation trust |
+| Level 4: Consistency | T4.1–T4.7 | 100% | Yes — documentation trust + upstream fidelity |
 
 ### Overall Verdict
 
@@ -631,6 +669,8 @@ The acceptance agent should fill this table after running all tests:
 | T4.3    |        |       |
 | T4.4    |        |       |
 | T4.5    |        |       |
+| T4.6    |        |       |
+| T4.7    |        |       |
 ```
 
 **Runtime used for Level 3:** [ ] Cursor IDE / [ ] Claude Code / [ ] Both
