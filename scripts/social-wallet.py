@@ -218,16 +218,16 @@ def call_api(endpoint: str, param_dict: dict) -> dict | None:
 # ── Main ──────────────────────────────────────────────────
 
 def main():
+    if len(sys.argv) < 2 or sys.argv[1] in ("--help", "-h") or sys.argv[1] not in ENDPOINTS:
+        print(f"Usage: python {sys.argv[0]} <method> [args...]", file=sys.stderr)
+        print(f"Methods: {', '.join(ENDPOINTS.keys())}", file=sys.stderr)
+        sys.exit(0 if len(sys.argv) >= 2 and sys.argv[1] in ("--help", "-h") else 1)
+
     load_secret()
 
     if not APPID or not APPSECRET:
         print(f"ERROR: Missing credentials. Create {SECRET_FILE} with:", file=sys.stderr)
         print(f'  {{"appid": "bgw_...", "appsecret": "..."}}', file=sys.stderr)
-        sys.exit(1)
-
-    if len(sys.argv) < 2 or sys.argv[1] not in ENDPOINTS:
-        print(f"Usage: python {sys.argv[0]} <method> [args...]", file=sys.stderr)
-        print(f"Methods: {', '.join(ENDPOINTS.keys())}", file=sys.stderr)
         sys.exit(1)
 
     method = sys.argv[1]

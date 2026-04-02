@@ -15,8 +15,9 @@ def read_key_file(fpath: str) -> str:
         print(f"ERROR: key file not found: {fpath}", file=sys.stderr)
         sys.exit(1)
     key = p.read_text().strip()
-    try:
-        p.unlink()
-    except FileNotFoundError:
-        pass  # Already deleted by another process
+    if p.is_file():
+        try:
+            p.unlink()
+        except (FileNotFoundError, PermissionError, OSError):
+            pass
     return key
