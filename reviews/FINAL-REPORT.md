@@ -3,7 +3,8 @@
 > **Version:** 1.0.0
 > **Date:** 2026-04-02 (post-incident refresh)
 > **Repository:** `bgw-cursor-plugin` @ branch `feature/plugin-v1.0`
-> **Final Commit:** `14a3524`
+> **Remediation Commit:** `14a3524` (INCIDENT-001 MCP tool names, upstream sync tests)
+> **Sign-Off Refresh Commit:** `f41f1c9` (acceptance re-run, artifact alignment, incident closure)
 > **Supersedes:** Previous FINAL-REPORT.md (pre-incident, baseline v1.2)
 
 ---
