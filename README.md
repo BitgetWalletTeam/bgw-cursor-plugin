@@ -26,45 +26,60 @@
 
 ## Quick Start
 
+### Installation
+
+Clone the plugin to a fixed location on your machine (only once):
+
+```bash
+git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git ~/bitget-wallet-plugin
+```
+
+Then **symlink** it into any project that needs it:
+
+```bash
+cd your-project
+ln -s ~/bitget-wallet-plugin .bitget-wallet
+```
+
+This way all your projects share the same plugin, and `git pull` in `~/bitget-wallet-plugin` updates them all.
+
+> **After Cursor marketplace listing:** You'll be able to install directly from the plugin marketplace — no clone or symlink needed.
+
 ### Cursor IDE
 
-1. **Add the plugin to your project:**
-   ```bash
-   cd your-project
-   git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git .bitget-wallet
-   ```
-
-2. **Open the project in Cursor.** The IDE auto-discovers `.cursor-plugin/plugin.json` — no manual setup needed. Skills, rules, and agents are loaded automatically.
-
+1. Symlink the plugin into your project (see above).
+2. Open the project in Cursor. The IDE auto-discovers `.cursor-plugin/plugin.json` — skills, rules, and agents load automatically.
 3. **Try it — ask Cursor Agent:**
    - "Swap 1 USDT to USDC on BNB Chain" → DeFi Trading skill activates
    - "Is this token safe? 0x..." → Token Analysis skill runs security audit
    - "Build a Solana DApp that connects Bitget Wallet" → DApp Integration generates code
    - "Help me debug my Bitget Wallet API signature" → API Debugging skill guides you
 
-4. **(Optional) Enable Python CLI tools** for swap execution and signing:
-   ```bash
-   cd .bitget-wallet
-   python3 -m venv .venv && source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-5. **(Optional) Enable MCP tools** for richer agent capabilities (36 tools, no API key needed):
-   ```bash
-   pip install bitget-wallet-mcp
-   ```
-   Cursor reads `.mcp.json` automatically. The agent can then call tools like `swap_quote`, `balance`, `security_audit` directly.
-
 ### Claude Code
 
-1. **Clone into your workspace:**
-   ```bash
-   git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git .bitget-wallet
-   ```
-
+1. Symlink the plugin into your workspace (same as above).
 2. Claude Code detects `.claude-plugin/plugin.json` and loads all skills and agents. `CLAUDE.md` provides project context.
-
 3. MCP tools are configured via `.mcp.json` (same as Cursor).
+
+### Optional: Python CLI Tools
+
+For swap execution and signing scripts:
+
+```bash
+cd ~/bitget-wallet-plugin
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Optional: MCP Tools
+
+For richer agent capabilities (36 tools, no API key needed):
+
+```bash
+pip install bitget-wallet-mcp
+```
+
+Cursor and Claude Code read `.mcp.json` automatically. The agent can then call tools like `swap_quote`, `balance`, `security_audit` directly.
 
 ### What works without MCP or CLI?
 
