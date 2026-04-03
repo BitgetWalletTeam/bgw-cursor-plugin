@@ -26,66 +26,80 @@
 
 ## Quick Start
 
-### Installation
+### Option A: Global Install (Recommended)
 
-**Step 1 — Clone and set up a quick-init command** (one-time):
+Install once → works in **every** Cursor project you open. No per-project setup.
 
 ```bash
-git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git
-echo "alias bgw-init='ln -sf $(cd bitget-wallet && pwd) .bitget-wallet'" >> ~/.zshrc
-source ~/.zshrc
+# 1. Clone the plugin repo (anywhere you like)
+git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git ~/bitget-wallet-plugin
+
+# 2. Run the installer
+bash ~/bitget-wallet-plugin/install.sh
+
+# 3. Restart Cursor (Cmd+Shift+P → "Reload Window" or quit & reopen)
 ```
 
-**Step 2 — In any project, run:**
+The installer registers the plugin in `~/.cursor/plugins/` and `~/.claude/` so Cursor loads it automatically. If your Cursor version has a "Include third-party Plugins" toggle under Settings → Features, make sure it's enabled.
+
+**To update:** `cd ~/bitget-wallet-plugin && git pull`
+**To uninstall:** `bash ~/bitget-wallet-plugin/install.sh --uninstall`
+
+### Option B: Single-Project Install
+
+For when you only want the plugin in one specific project.
 
 ```bash
+# 1. Clone into your project (as a hidden subdirectory)
 cd your-project
-bgw-init
+git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git .bitget-wallet
+
+# 2. Create workspace-level symlinks
+bash .bitget-wallet/install.sh --project
+
+# 3. Add the symlinks to .gitignore (the installer prints the list)
 ```
 
-That's it. All projects share the same plugin clone. To update, just `git pull` in the clone directory.
+This creates symlinks (`.cursor-plugin/`, `skills/`, `rules/`, etc.) at your project root pointing into `.bitget-wallet/`. Cursor discovers them when you open the project.
 
-> Cursor's plugin system is workspace-scoped — there's no global plugin directory, so each project needs this one-time `bgw-init`. After Cursor marketplace listing, this step goes away entirely.
+**To remove:** `bash .bitget-wallet/install.sh --uninstall-project`
 
-### Cursor IDE
+### Try It
 
-1. Run `bgw-init` in your project (see above).
-2. Open the project in Cursor. The IDE auto-discovers `.cursor-plugin/plugin.json` — skills, rules, and agents load automatically.
-3. **Try it — ask Cursor Agent:**
-   - "Swap 1 USDT to USDC on BNB Chain" → DeFi Trading skill activates
-   - "Is this token safe? 0x..." → Token Analysis skill runs security audit
-   - "Build a Solana DApp that connects Bitget Wallet" → DApp Integration generates code
-   - "Help me debug my Bitget Wallet API signature" → API Debugging skill guides you
+Once installed, ask the Cursor Agent:
 
-### Claude Code
+- "Swap 1 USDT to USDC on BNB Chain" → DeFi Trading skill activates
+- "Is this token safe? 0x..." → Token Analysis skill runs security audit
+- "Build a Solana DApp that connects Bitget Wallet" → DApp Integration generates code
+- "Help me debug my Bitget Wallet API signature" → API Debugging skill guides you
 
-1. Run `bgw-init` in your workspace (same as above).
-2. Claude Code detects `.claude-plugin/plugin.json` and loads all skills and agents. `CLAUDE.md` provides project context.
-3. MCP tools are configured via `.mcp.json` (same as Cursor).
-
-### Optional: Python CLI Tools
-
-For swap execution and signing scripts:
+### Optional: Python CLI & MCP Tools
 
 ```bash
-cd $(readlink .bitget-wallet)
+# CLI tools (swap signing, key management)
+cd ~/bitget-wallet-plugin   # or .bitget-wallet for project install
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-```
 
-### Optional: MCP Tools
-
-For richer agent capabilities (36 tools, no API key needed):
-
-```bash
+# MCP server (36 tools, no API key needed)
 pip install bitget-wallet-mcp
 ```
 
-Cursor and Claude Code read `.mcp.json` automatically. The agent can then call tools like `swap_quote`, `balance`, `security_audit` directly.
+Cursor reads `.mcp.json` automatically. The agent can then call tools like `swap_quote`, `balance`, `security_audit` directly.
 
-### What works without MCP or CLI?
+### Claude Code
+
+```bash
+# Claude Code uses --plugin-dir for local plugins
+claude --plugin-dir ~/bitget-wallet-plugin
+```
+
+Claude Code detects `.claude-plugin/plugin.json` and loads all skills and agents. `CLAUDE.md` provides project context. MCP tools are configured via `.mcp.json`.
+
+### What Works Without MCP or CLI?
 
 Even without installing MCP or Python dependencies, the plugin provides:
+
 - **7 skills** with detailed domain knowledge (swap flows, chain guides, API docs)
 - **3 rules** that auto-apply when you write code (provider namespace, security, swap safety)
 - **3 agent personas** (DeFi operator, DApp developer, API debugger)
@@ -138,6 +152,7 @@ agents/
   dapp-developer.md        # DApp code generation agent
   api-debugger.md          # API debugging agent
 .mcp.json                  # MCP server config (bitget-wallet-mcp)
+install.sh                 # Plugin installer (global / per-project)
 CLAUDE.md                  # Claude Code project context
 CHANGELOG.md               # Version history
 reviews/                   # Audit & review artifacts (not part of plugin)
