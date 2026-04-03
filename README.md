@@ -28,20 +28,28 @@
 
 ### Installation
 
-**Step 1 — Clone the plugin** to any location you like:
+**Step 1 — Clone the plugin** anywhere you like (only once):
 
 ```bash
-git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git /path/to/bitget-wallet-plugin
+git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git
 ```
 
-**Step 2 — Symlink** it into your project:
+**Step 2 — Get the full path** of the clone, you'll need it for symlinking:
 
 ```bash
-cd your-project
-ln -s /path/to/bitget-wallet-plugin .bitget-wallet
+cd bitget-wallet && pwd
+# example output: /Users/me/bitget-wallet
 ```
 
-Repeat Step 2 for each project. All symlinks point to the same clone, so a single `git pull` updates every project.
+**Step 3 — Symlink into your project** (repeat for each project):
+
+```bash
+cd /path/to/your-project
+ln -s /Users/me/bitget-wallet .bitget-wallet
+#      ↑ paste the output from Step 2
+```
+
+All symlinks point to the same clone. To update the plugin, just `git pull` once in the original clone directory.
 
 > **After Cursor marketplace listing:** You'll be able to install directly from the marketplace — no clone or symlink needed.
 
