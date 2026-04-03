@@ -28,22 +28,22 @@
 
 ### Installation
 
-Clone the plugin to a fixed location on your machine (only once):
+**Step 1 — Clone the plugin** to any location you like:
 
 ```bash
-git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git ~/bitget-wallet-plugin
+git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git /path/to/bitget-wallet-plugin
 ```
 
-Then **symlink** it into any project that needs it:
+**Step 2 — Symlink** it into your project:
 
 ```bash
 cd your-project
-ln -s ~/bitget-wallet-plugin .bitget-wallet
+ln -s /path/to/bitget-wallet-plugin .bitget-wallet
 ```
 
-This way all your projects share the same plugin, and `git pull` in `~/bitget-wallet-plugin` updates them all.
+Repeat Step 2 for each project. All symlinks point to the same clone, so a single `git pull` updates every project.
 
-> **After Cursor marketplace listing:** You'll be able to install directly from the plugin marketplace — no clone or symlink needed.
+> **After Cursor marketplace listing:** You'll be able to install directly from the marketplace — no clone or symlink needed.
 
 ### Cursor IDE
 
@@ -66,7 +66,7 @@ This way all your projects share the same plugin, and `git pull` in `~/bitget-wa
 For swap execution and signing scripts:
 
 ```bash
-cd ~/bitget-wallet-plugin
+cd /path/to/bitget-wallet-plugin
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
