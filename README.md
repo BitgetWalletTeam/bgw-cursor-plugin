@@ -28,25 +28,52 @@
 
 ### Cursor IDE
 
-1. Clone this repository into your project:
+1. **Add the plugin to your project:**
    ```bash
+   cd your-project
    git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git .bitget-wallet
    ```
 
-2. Cursor auto-discovers the plugin from `.cursor-plugin/plugin.json`.
+2. **Open the project in Cursor.** The IDE auto-discovers `.cursor-plugin/plugin.json` — no manual setup needed. Skills, rules, and agents are loaded automatically.
 
-4. (Optional) To use Python CLI scripts for swap execution:
+3. **Try it — ask Cursor Agent:**
+   - "Swap 1 USDT to USDC on BNB Chain" → DeFi Trading skill activates
+   - "Is this token safe? 0x..." → Token Analysis skill runs security audit
+   - "Build a Solana DApp that connects Bitget Wallet" → DApp Integration generates code
+   - "Help me debug my Bitget Wallet API signature" → API Debugging skill guides you
+
+4. **(Optional) Enable Python CLI tools** for swap execution and signing:
    ```bash
    cd .bitget-wallet
    python3 -m venv .venv && source .venv/bin/activate
    pip install -r requirements.txt
    ```
 
+5. **(Optional) Enable MCP tools** for richer agent capabilities (36 tools, no API key needed):
+   ```bash
+   pip install bitget-wallet-mcp
+   ```
+   Cursor reads `.mcp.json` automatically. The agent can then call tools like `swap_quote`, `balance`, `security_audit` directly.
+
 ### Claude Code
 
-1. Clone and place in your workspace.
-2. Claude Code detects `.claude-plugin/plugin.json` and loads all skills and agents.
-3. MCP tools configured via `.mcp.json`.
+1. **Clone into your workspace:**
+   ```bash
+   git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git .bitget-wallet
+   ```
+
+2. Claude Code detects `.claude-plugin/plugin.json` and loads all skills and agents. `CLAUDE.md` provides project context.
+
+3. MCP tools are configured via `.mcp.json` (same as Cursor).
+
+### What works without MCP or CLI?
+
+Even without installing MCP or Python dependencies, the plugin provides:
+- **7 skills** with detailed domain knowledge (swap flows, chain guides, API docs)
+- **3 rules** that auto-apply when you write code (provider namespace, security, swap safety)
+- **3 agent personas** (DeFi operator, DApp developer, API debugger)
+
+The agent can answer questions, generate code, and guide you through workflows using just the skill knowledge. MCP and CLI tools add execution capabilities (actual API calls, swap signing).
 
 ## Repository Structure
 
