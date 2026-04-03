@@ -34,22 +34,13 @@
 git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git
 ```
 
-**Step 2 — Get the full path** of the clone, you'll need it for symlinking:
+**Step 2 — Symlink into your project** (repeat for each project):
 
 ```bash
-cd bitget-wallet && pwd
-# example output: /Users/me/bitget-wallet
+ln -s $(cd bitget-wallet && pwd) /path/to/your-project/.bitget-wallet
 ```
 
-**Step 3 — Symlink into your project** (repeat for each project):
-
-```bash
-cd /path/to/your-project
-ln -s /Users/me/bitget-wallet .bitget-wallet
-#      ↑ paste the output from Step 2
-```
-
-All symlinks point to the same clone. To update the plugin, just `git pull` once in the original clone directory.
+All symlinks point to the same clone. To update the plugin, just `git pull` once in the clone directory.
 
 > **After Cursor marketplace listing:** You'll be able to install directly from the marketplace — no clone or symlink needed.
 
