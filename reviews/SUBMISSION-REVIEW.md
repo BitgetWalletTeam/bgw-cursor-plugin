@@ -1,6 +1,7 @@
 # Bitget Wallet Cursor Plugin — Submission Review Document
 
-> Version: 1.0.0 | Date: 2026-03-30 | Author: Bitget Wallet AI Lab
+> Version: 1.0.1 | Date: 2026-04-02 | Author: Bitget Wallet AI Lab
+> Upstream sync verified: 2026-04-02 (star counts, MCP tool names, auth model)
 
 ---
 
@@ -24,11 +25,11 @@ Bitget Wallet AI Lab has 5 separate open-source repositories on GitHub:
 
 | Repository | Stars | Content |
 |-----------|-------|---------|
-| [bitget-wallet-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill) | 171 | DeFi trading, token analysis, social wallet, RWA, x402 |
+| [bitget-wallet-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill) | 176+ | DeFi trading, token analysis, social wallet, RWA, x402 |
 | [bitget-wallet-developer-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill) | — | DApp code generation, 8+ chains |
 | [dapp-common-skill](https://github.com/bitget-wallet-ai-lab/dapp-common-skill) | — | DApp UI/UX patterns |
 | [bitget-wallet-partner-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-partner-skill) | 1 | API debugging (HMAC, Partner-Code, Agent auth) |
-| [bitget-wallet-mcp](https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp) | 13 | MCP server, 17 tools |
+| [bitget-wallet-mcp](https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp) | 14+ | MCP server, 36 tools, no API key (SHA256 hash signing) |
 
 This plugin **consolidates all 5 repositories** into a single, unified Cursor/Claude Code plugin with progressive disclosure architecture, auto-applied safety rules, and agent personas.
 
@@ -219,7 +220,7 @@ Confirmation is **agent-orchestrated** — the agent obtains user approval befor
 
 Every file in this plugin traces back to a specific source repository on GitHub:
 
-### From `bitget-wallet-skill` (171 stars) → 5 skills + 7 scripts
+### From `bitget-wallet-skill` → 5 skills + 7 scripts
 
 | Plugin Path | Source Path |
 |-------------|------------|

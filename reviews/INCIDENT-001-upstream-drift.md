@@ -3,7 +3,9 @@
 > **ID:** INCIDENT-001
 > **Date Detected:** 2026-04-02
 > **Severity:** Medium
-> **Status:** Remediated
+> **Status:** Closed
+> **Closure Commit:** `14a3524` (MCP tool names, star count, upstream sync tests)
+> **Prior Fix Commit:** `692311b` (API key removal)
 
 ---
 
@@ -69,21 +71,16 @@ All internal checks pass, but content is stale
 ### Finding 2: MCP Tool Names Stale
 
 - **Upstream change:** `bitget-wallet-mcp` tool names changed from `bgw_swap`, `bgw_check_token`, `bgw_get_balance`, `bgw_get_supported_chains` (4 tools) to `swap_quote`, `swap_confirm`, `swap_make_order`, `swap_send`, `check_swap_token`, `balance`, etc. (36 tools).
-- **Our state:** 5 files still reference old tool names:
-  - `skills/defi-trading/SKILL.md` (MCP Tools table)
-  - `agents/defi-operator.md` (Tools section + Workflow)
-  - `rules/swap-safety.mdc` (inline reference)
-  - `reviews/SUBMISSION-REVIEW.md` (consistency table)
-  - `CLAUDE.md` (already fixed tool count, but old tool names may linger)
-- **Impact:** Agent using MCP would fail to find tools by the documented names. The MCP server would expose `swap_quote` but the agent would look for `bgw_swap`.
-- **Fix:** Pending
+- **Our state (before fix):** 5 files referenced old tool names.
+- **Impact:** Agent using MCP would fail to find tools by the documented names.
+- **Fix:** Completed in commit `14a3524`. Updated `defi-trading/SKILL.md`, `agents/defi-operator.md`, `rules/swap-safety.mdc`, `SUBMISSION-REVIEW.md`.
 
 ### Finding 3: Star Count Stale
 
-- **Our README:** "Wallet Skill (171 stars)"
+- **Our README (before fix):** "Wallet Skill (171 stars)"
 - **Actual (API check):** 176 stars
 - **Impact:** Minor; cosmetic inaccuracy.
-- **Fix:** Pending
+- **Fix:** Completed in commit `14a3524`. Removed hardcoded star count from README.
 
 ---
 
@@ -102,23 +99,20 @@ These appear in `token-analysis/SKILL.md`, `references/market-data.md`, `referen
 
 ## Remediation
 
-### Immediate Fixes (this commit)
+### Immediate Fixes
 
-1. ~~Remove `BGW_API_KEY`/`BGW_API_SECRET` from `.mcp.json`, README, CLAUDE.md~~ (done, `692311b`)
-2. Update MCP tool names in `defi-trading/SKILL.md`, `agents/defi-operator.md`, `rules/swap-safety.mdc`
-3. Update star count in `README.md`
-4. Update `SUBMISSION-REVIEW.md` MCP tool references
+1. ~~Remove `BGW_API_KEY`/`BGW_API_SECRET` from `.mcp.json`, README, CLAUDE.md~~ → Done (`692311b`)
+2. ~~Update MCP tool names in `defi-trading/SKILL.md`, `agents/defi-operator.md`, `rules/swap-safety.mdc`~~ → Done (`14a3524`)
+3. ~~Update star count in `README.md`~~ → Done (`14a3524`)
+4. ~~Update `SUBMISSION-REVIEW.md` MCP tool references and upstream facts~~ → Done (`14a3524` + post-incident refresh)
 
 ### Structural Prevention
 
-5. Add **upstream sync check** to acceptance test plan (`ACCEPTANCE-TEST.md`) as a new Level 4 test:
-   - Fetch latest upstream READMEs
-   - Verify MCP tool names match live `bitget-wallet-mcp` documentation
-   - Verify authentication model claims match upstream
-   - Verify chain support claims match upstream
-   - Verify star counts are within reasonable range
+5. ~~Add **upstream sync check** to acceptance test plan (`ACCEPTANCE-TEST.md`) as new Level 4 tests~~ → Done (`14a3524`):
+   - `T4.6` — Fetch latest upstream MCP README, verify tool names match
+   - `T4.7` — Verify `.mcp.json` has no stale API key env vars, upstream confirms no-key auth
 
-This ensures future acceptance runs catch upstream drift before submission.
+All 5 remediation items are closed.
 
 ---
 

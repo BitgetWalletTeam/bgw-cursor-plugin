@@ -1,48 +1,54 @@
 # Bitget Wallet Cursor Plugin — Final Audit & Acceptance Sign-Off
 
 > **Version:** 1.0.0
-> **Date:** 2026-04-02
+> **Date:** 2026-04-02 (post-incident refresh)
 > **Repository:** `bgw-cursor-plugin` @ branch `feature/plugin-v1.0`
-> **Final Commit:** `ec2593d`
+> **Final Commit:** `14a3524`
+> **Supersedes:** Previous FINAL-REPORT.md (pre-incident, baseline v1.2)
 
 ---
 
 ## Verdict: PASS
 
-The Bitget Wallet Cursor & Claude Code plugin has completed the full audit-fix-acceptance lifecycle. All workstreams have reached zero-finding status. The plugin is ready for submission.
+The Bitget Wallet Cursor & Claude Code plugin has completed the full audit-fix-acceptance lifecycle, including post-incident remediation for upstream drift (INCIDENT-001). All workstreams have reached zero-finding status. The plugin is ready for submission.
 
 ---
 
 ## Audit Lifecycle Summary
 
 ```
-                      ┌─────────────────────────────────────┐
-                      │     Phase 1: Plugin Audit           │
-                      │     14 rounds (v1.0 → v1.13)       │
-                      │     NO-GO → PASS (zero findings)   │
-                      └──────────────┬──────────────────────┘
-                                     │
-                      ┌──────────────▼──────────────────────┐
-                      │     Phase 2: Security Audit         │
-                      │     SlowMist Agent Security v0.1.2  │
-                      │     🟢 LOW / ✅ SAFE                │
-                      └──────────────┬──────────────────────┘
-                                     │
-                      ┌──────────────▼──────────────────────┐
-                      │     Phase 3: Acceptance Plan Audit  │
-                      │     4 rounds (v1.0 → v1.3)         │
-                      │     HOLD → PASS (zero findings)    │
-                      └──────────────┬──────────────────────┘
-                                     │
-                      ┌──────────────▼──────────────────────┐
-                      │     Phase 4: Acceptance Testing     │
-                      │     35 tests, 4 levels              │
-                      │     35/35 PASS (100%)               │
-                      └──────────────┬──────────────────────┘
-                                     │
-                      ┌──────────────▼──────────────────────┐
-                      │     ✅  FINAL SIGN-OFF              │
-                      └─────────────────────────────────────┘
+              ┌─────────────────────────────────────────┐
+              │     Phase 1: Plugin Audit               │
+              │     14 rounds (v1.0 → v1.13)            │
+              │     NO-GO → PASS (zero findings)        │
+              └──────────────┬──────────────────────────┘
+                             │
+              ┌──────────────▼──────────────────────────┐
+              │     Phase 2: Security Audit             │
+              │     SlowMist Agent Security v0.1.2      │
+              │     🟢 LOW / ✅ SAFE                    │
+              └──────────────┬──────────────────────────┘
+                             │
+              ┌──────────────▼──────────────────────────┐
+              │     Phase 3: Acceptance Plan Audit      │
+              │     4 rounds (v1.0 → v1.3)              │
+              │     HOLD → PASS (zero findings)         │
+              └──────────────┬──────────────────────────┘
+                             │
+              ┌──────────────▼──────────────────────────┐
+              │     Phase 4: Acceptance Testing (v1.0)  │
+              │     Baseline v1.2 — 35/35 PASS          │
+              └──────────────┬──────────────────────────┘
+                             │
+              ┌──────────────▼──────────────────────────┐
+              │     Phase 5: Incident & Re-Acceptance   │
+              │     INCIDENT-001 (upstream drift)       │
+              │     Baseline v1.3 — 41/41 PASS          │
+              └──────────────┬──────────────────────────┘
+                             │
+              ┌──────────────▼──────────────────────────┐
+              │     ✅  FINAL SIGN-OFF                  │
+              └─────────────────────────────────────────┘
 ```
 
 ---
@@ -110,23 +116,55 @@ Report: `reviews/ACCEPTANCE-AUDIT-v1.3.md`
 
 ---
 
-## Phase 4: Acceptance Testing
+## Phase 4: Acceptance Testing (initial)
 
 Baseline: `reviews/ACCEPTANCE-TEST.md` v1.2
 Executor: Independent AI Acceptance Agent (Cursor IDE, Agent mode)
+
+Initial run: 33/35 (CONDITIONAL PASS) — 2 CLI robustness bugs (T2.1e, T2.9).
+After fix commit `ec2593d`: 35/35 (PASS).
+
+Report: `reviews/ACCEPTANCE-RESULT-v1.0.md`
+
+---
+
+## Phase 5: Incident & Re-Acceptance
+
+### INCIDENT-001: Upstream Drift
+
+**Root cause:** Plugin was built from one-time upstream snapshots. 14 audit rounds verified internal consistency but never checked claims against live upstream sources. When `bitget-wallet-mcp` removed API key requirements and changed tool names (4→36), the plugin's docs stayed frozen.
+
+**Findings and fixes:**
+
+| # | Issue | Severity | Fix Commit |
+|---|-------|----------|------------|
+| 1 | MCP no longer requires API key (SHA256 hash signing) | Medium | `692311b` |
+| 2 | MCP tool names changed (`bgw_*` → `swap_quote`, etc., 4→36) | Medium | `14a3524` |
+| 3 | Star count hardcoded (171 → 176+) | Low | `14a3524` |
+
+**Structural prevention:** Added T4.6 (upstream MCP tool name sync) and T4.7 (upstream auth model sync) to acceptance test plan.
+
+**Status:** Closed. Report: `reviews/INCIDENT-001-upstream-drift.md`
+
+### Post-Incident Re-Audit
+
+Re-audit report: `reviews/INCIDENT-001-REAUDIT-v1.0.md`
+
+Identified 3 remaining issues (1H, 1M, 1L) — all related to sign-off artifacts not yet reflecting the new baseline. Addressed in this FINAL-REPORT refresh.
+
+### Re-Acceptance (v1.1)
+
+Baseline: `reviews/ACCEPTANCE-TEST.md` v1.3 (adds T4.6, T4.7 upstream sync checks)
 
 | Level | Scope | Tests | Pass Rate |
 |-------|-------|-------|-----------|
 | Level 1 | Structural (manifests, skills, rules, agents) | 8 | 100% |
 | Level 2 | CLI smoke tests (help + API calls) | 17 | 100% |
 | Level 3 | Knowledge accuracy (9 skill domains) | 9 | 100% |
-| Level 4 | Cross-consistency (README ↔ CLAUDE.md ↔ manifests) | 5 | 100% |
-| **Total** | | **35** | **100%** |
+| Level 4 | Consistency + upstream sync | 7 | 100% |
+| **Total** | | **41** | **100%** |
 
-Initial run: 33/35 (CONDITIONAL PASS) — 2 CLI robustness bugs found (T2.1e, T2.9).
-After fix commit `ec2593d`: 35/35 (PASS).
-
-Report: `reviews/ACCEPTANCE-RESULT-v1.0.md`
+Report: `reviews/ACCEPTANCE-RESULT-v1.1.md`
 
 ---
 
@@ -140,7 +178,7 @@ Report: `reviews/ACCEPTANCE-RESULT-v1.0.md`
 | Agents | 3 | defi-operator, dapp-developer, api-debugger |
 | Scripts | 7 | Python CLI tools for swap signing, social wallet, x402 payments |
 | Manifests | 2 | `.cursor-plugin/plugin.json` + `.claude-plugin/plugin.json` |
-| MCP config | 1 | `.mcp.json` (bitget-wallet-mcp server) |
+| MCP config | 1 | `.mcp.json` (bitget-wallet-mcp, 36 tools, no API key) |
 
 ---
 
@@ -150,11 +188,14 @@ All review artifacts are in `reviews/`:
 
 | File | Purpose |
 |------|---------|
-| `FINAL-REPORT.md` | This document — lifecycle sign-off |
-| `SUBMISSION-REVIEW.md` | Submission-ready review document for external auditors |
+| `FINAL-REPORT.md` | This document — lifecycle sign-off (post-incident refresh) |
+| `SUBMISSION-REVIEW.md` | Submission document for external auditors (v1.0.1, upstream-synced) |
 | `security-audit-slowmist-v1.0.md` | SlowMist Agent Security assessment |
-| `ACCEPTANCE-TEST.md` | Acceptance test plan (v1.2, 35 tests, 4 levels) |
-| `ACCEPTANCE-RESULT-v1.0.md` | Acceptance test execution result (35/35 PASS) |
+| `ACCEPTANCE-TEST.md` | Acceptance test plan (v1.3, 41 test rows, 4 levels + upstream sync) |
+| `ACCEPTANCE-RESULT-v1.1.md` | **Current** acceptance result (41/41 PASS, baseline v1.3) |
+| `ACCEPTANCE-RESULT-v1.0.md` | Historical acceptance result (35/35, baseline v1.2, pre-incident) |
+| `INCIDENT-001-upstream-drift.md` | Upstream drift incident report (Closed) |
+| `INCIDENT-001-REAUDIT-v1.0.md` | Post-incident re-audit report |
 | `ACCEPTANCE-AUDIT-v1.0` → `v1.3` | Acceptance plan audit trail |
 | `AUDIT-REPORT-v1.0` → `v1.13` | Plugin audit trail (14 rounds) |
 | `REVIEW-v1.0.md` | Initial internal review log |
@@ -163,11 +204,12 @@ All review artifacts are in `reviews/`:
 
 ## Conclusion
 
-The Bitget Wallet AI Plugin (v1.0.0) has passed all four phases of quality assurance:
+The Bitget Wallet AI Plugin (v1.0.0) has passed all five phases of quality assurance:
 
 1. **Plugin audit** — 14 rounds, 41 issues found and resolved, zero-finding pass
 2. **Security audit** — 26 SlowMist checks passed, rated LOW risk / SAFE
 3. **Acceptance plan audit** — 4 rounds, plan validated for independent execution
-4. **Acceptance testing** — 35/35 tests pass across structural, CLI, knowledge, and consistency levels
+4. **Acceptance testing** — 41/41 tests pass across structural, CLI, knowledge, consistency, and upstream sync levels
+5. **Incident response** — Upstream drift detected, root-caused, remediated, and re-verified with expanded acceptance scope
 
 No open findings remain. The plugin is ready for submission.
