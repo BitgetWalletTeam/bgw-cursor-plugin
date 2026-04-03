@@ -28,25 +28,28 @@
 
 ### Installation
 
-**Step 1 — Clone the plugin** anywhere you like (only once):
+**Step 1 — Clone and set up a quick-init command** (one-time):
 
 ```bash
 git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git
+echo "alias bgw-init='ln -sf $(cd bitget-wallet && pwd) .bitget-wallet'" >> ~/.zshrc
+source ~/.zshrc
 ```
 
-**Step 2 — Symlink into your project** (repeat for each project):
+**Step 2 — In any project, run:**
 
 ```bash
-ln -s $(cd bitget-wallet && pwd) /path/to/your-project/.bitget-wallet
+cd your-project
+bgw-init
 ```
 
-All symlinks point to the same clone. To update the plugin, just `git pull` once in the clone directory.
+That's it. All projects share the same plugin clone. To update, just `git pull` in the clone directory.
 
-> **After Cursor marketplace listing:** You'll be able to install directly from the marketplace — no clone or symlink needed.
+> Cursor's plugin system is workspace-scoped — there's no global plugin directory, so each project needs this one-time `bgw-init`. After Cursor marketplace listing, this step goes away entirely.
 
 ### Cursor IDE
 
-1. Symlink the plugin into your project (see above).
+1. Run `bgw-init` in your project (see above).
 2. Open the project in Cursor. The IDE auto-discovers `.cursor-plugin/plugin.json` — skills, rules, and agents load automatically.
 3. **Try it — ask Cursor Agent:**
    - "Swap 1 USDT to USDC on BNB Chain" → DeFi Trading skill activates
@@ -56,7 +59,7 @@ All symlinks point to the same clone. To update the plugin, just `git pull` once
 
 ### Claude Code
 
-1. Symlink the plugin into your workspace (same as above).
+1. Run `bgw-init` in your workspace (same as above).
 2. Claude Code detects `.claude-plugin/plugin.json` and loads all skills and agents. `CLAUDE.md` provides project context.
 3. MCP tools are configured via `.mcp.json` (same as Cursor).
 
@@ -65,7 +68,7 @@ All symlinks point to the same clone. To update the plugin, just `git pull` once
 For swap execution and signing scripts:
 
 ```bash
-cd /path/to/bitget-wallet-plugin
+cd $(readlink .bitget-wallet)
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
