@@ -64,9 +64,23 @@ This creates symlinks (`.cursor-plugin/`, `skills/`, `rules/`, etc.) at your pro
 
 **To remove:** `bash .bitget-wallet/install.sh --uninstall-project`
 
+### Verify Installation
+
+After installing and restarting Cursor, the plugin loads silently — **it will not appear in the Extensions panel or the marketplace**. That's expected for local plugins.
+
+To confirm it's working, open any project in Cursor and ask the Agent:
+
+> "What Bitget Wallet skills do you have?"
+
+The Agent should list all 7 skills (DeFi Trading, Token Analysis, Social Wallet, etc.). If it doesn't recognize the question, check:
+
+1. You restarted Cursor after running `install.sh`
+2. Settings → Features → "Include third-party Plugins" is enabled (if the toggle exists)
+3. Run `cat ~/.claude/settings.json | grep bitget` — should show `"bitget-wallet@local": true`
+
 ### Try It
 
-Once installed, ask the Cursor Agent:
+Once verified, try these prompts:
 
 - "Swap 1 USDT to USDC on BNB Chain" → DeFi Trading skill activates
 - "Is this token safe? 0x..." → Token Analysis skill runs security audit
