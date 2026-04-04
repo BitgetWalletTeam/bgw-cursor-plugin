@@ -40,7 +40,7 @@ bash ~/bitget-wallet-plugin/install.sh
 # 3. Restart Cursor (Cmd+Shift+P → "Reload Window" or quit & reopen)
 ```
 
-The installer registers the plugin in `~/.cursor/plugins/` and `~/.claude/` so Cursor loads it automatically. If your Cursor version has a "Include third-party Plugins" toggle under Settings → Features, make sure it's enabled.
+The installer registers the plugin in `~/.cursor/plugins/` and `~/.claude/` so Cursor loads it automatically. In Cursor Settings, search for "third-party" — if you see a toggle called **"Include third-party Plugins, Skills, and other configs"**, make sure it's enabled.
 
 **To update:** `cd ~/bitget-wallet-plugin && git pull`
 **To uninstall:** `bash ~/bitget-wallet-plugin/install.sh --uninstall`
@@ -75,7 +75,7 @@ To confirm it's working, open any project in Cursor and ask the Agent:
 The Agent should list all 7 skills (DeFi Trading, Token Analysis, Social Wallet, etc.). If it doesn't recognize the question, check:
 
 1. You restarted Cursor after running `install.sh`
-2. Settings → Features → "Include third-party Plugins" is enabled (if the toggle exists)
+2. In Cursor Settings, search for "third-party" — if you see a toggle called **"Include third-party Plugins, Skills, and other configs"**, make sure it's enabled (some versions may not show this toggle)
 3. Run `cat ~/.claude/settings.json | grep bitget` — should show `"bitget-wallet@local": true`
 
 ### Try It
