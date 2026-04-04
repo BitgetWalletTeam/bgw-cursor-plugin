@@ -180,6 +180,7 @@ agents/
   api-debugger.md          # API debugging agent
 .mcp.json                  # MCP server config (bitget-wallet-mcp)
 install.sh                 # Plugin installer (global / per-project)
+upstream.json              # Pinned upstream commit SHAs for drift detection
 CLAUDE.md                  # Claude Code project context
 CHANGELOG.md               # Version history
 reviews/                   # Audit & review artifacts (not part of plugin)
@@ -205,6 +206,20 @@ Install (requires [`uv`](https://docs.astral.sh/uv/getting-started/installation/
 ```bash
 uvx bitget-wallet-mcp
 ```
+
+## Upstream Tracking
+
+This plugin consolidates content from 4 upstream repositories. Each source's pinned commit SHA is recorded in `upstream.json`.
+
+```bash
+# Check if upstream repos have new commits
+bash scripts/check-upstream.sh
+
+# Update pinned commits after reviewing changes
+bash scripts/check-upstream.sh --update
+```
+
+When drift is detected, the script prints GitHub compare URLs so you can review what changed before syncing.
 
 ## Architecture
 
