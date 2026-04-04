@@ -21,17 +21,17 @@ A **Cursor IDE + Claude Code plugin** that gives AI agents the ability to:
 
 ### Why this plugin?
 
-Bitget Wallet AI Lab has 5 separate open-source repositories on GitHub:
+Bitget Wallet AI Lab maintains 4 upstream repositories on GitHub (with `dapp-common-skill` included as a subdirectory inside `bitget-wallet-developer-skill`):
 
 | Repository | Stars | Content |
 |-----------|-------|---------|
 | [bitget-wallet-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill) | 176+ | DeFi trading, token analysis, social wallet, RWA, x402 |
 | [bitget-wallet-developer-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill) | — | DApp code generation, 8+ chains |
-| [dapp-common-skill](https://github.com/bitget-wallet-ai-lab/dapp-common-skill) | — | DApp UI/UX patterns |
+| dapp-common-skill (subdirectory of [developer-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill/tree/main/dapp-common-skill)) | — | DApp UI/UX patterns |
 | [bitget-wallet-partner-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-partner-skill) | 1 | API debugging (HMAC, Partner-Code, Agent auth) |
 | [bitget-wallet-mcp](https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp) | 14+ | MCP server, 36 tools, no API key (SHA256 hash signing) |
 
-This plugin **consolidates all 5 repositories** into a single, unified Cursor/Claude Code plugin with progressive disclosure architecture, auto-applied safety rules, and agent personas.
+This plugin **consolidates all 4 repositories** into a single, unified Cursor/Claude Code plugin with progressive disclosure architecture, auto-applied safety rules, and agent personas.
 
 ### Benchmark
 

@@ -207,19 +207,20 @@ Install (requires [`uv`](https://docs.astral.sh/uv/getting-started/installation/
 uvx bitget-wallet-mcp
 ```
 
-## Upstream Tracking
+## Upstream Sources
 
-This plugin consolidates content from 4 upstream repositories. Each source's pinned commit SHA is recorded in `upstream.json`.
+This plugin consolidates content from the following upstream repositories. All content was snapshot-copied at the pinned commits listed below.
 
-```bash
-# Check if upstream repos have new commits
-bash scripts/check-upstream.sh
+| Upstream Repo | Pinned Commit | Commit Date | Content in Plugin |
+|---------------|---------------|-------------|-------------------|
+| [bitget-wallet-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill) | [`2a4b6c5`](https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill/tree/2a4b6c5) | 2026-04-03 | defi-trading, token-analysis, social-wallet, rwa-trading, x402-payments, scripts/*.py |
+| [bitget-wallet-developer-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill) | [`34a02aa`](https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill/tree/34a02aa) | 2026-03-24 | dapp-integration: 13 chain-specific refs + 10 DApp pattern refs (from `dapp-common-skill/` subdirectory) |
+| [bitget-wallet-partner-skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-partner-skill) | [`05814bd`](https://github.com/bitget-wallet-ai-lab/bitget-wallet-partner-skill/tree/05814bd) | 2026-03-31 | api-debugging |
+| [bitget-wallet-mcp](https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp) | [`7d961f7`](https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp/tree/7d961f7) | 2026-03-31 | MCP tool names, auth model, .mcp.json config |
 
-# Update pinned commits after reviewing changes
-bash scripts/check-upstream.sh --update
-```
+Machine-readable version: [`upstream.json`](upstream.json)
 
-When drift is detected, the script prints GitHub compare URLs so you can review what changed before syncing.
+**Drift detection:** run `bash scripts/check-upstream.sh` to compare pinned commits against current upstream HEAD. Use `--update` to bump pins after reviewing changes.
 
 ## Architecture
 

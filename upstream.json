@@ -7,7 +7,7 @@
       "repo": "https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill",
       "branch": "main",
       "pinnedCommit": "2a4b6c5b19b21472cb4cd27eb0f8ecef988c3b9a",
-      "snapshotDate": "2026-03-30",
+      "commitDate": "2026-04-03",
       "lastVerified": "2026-04-03",
       "contentUsed": [
         "skills/defi-trading/",
@@ -23,18 +23,20 @@
       "repo": "https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill",
       "branch": "main",
       "pinnedCommit": "34a02aa9fa87ea2bfdd52e49c5939e4890874f76",
-      "snapshotDate": "2026-03-30",
+      "commitDate": "2026-03-24",
       "lastVerified": "2026-04-03",
       "contentUsed": [
-        "skills/dapp-integration/"
-      ]
+        "skills/dapp-integration/ (from bitget-wallet-developer-skill/skill/)",
+        "skills/dapp-integration/references/dapp-*.md (10 files, from dapp-common-skill/skill/references/)"
+      ],
+      "_note": "This repo contains both bitget-wallet-developer-skill/ and dapp-common-skill/ as subdirectories. dapp-common-skill does not have a separate GitHub repo."
     },
     {
       "name": "bitget-wallet-partner-skill",
       "repo": "https://github.com/bitget-wallet-ai-lab/bitget-wallet-partner-skill",
       "branch": "main",
       "pinnedCommit": "05814bdace14fe947448318a220fde00742040ae",
-      "snapshotDate": "2026-03-30",
+      "commitDate": "2026-03-31",
       "lastVerified": "2026-04-03",
       "contentUsed": [
         "skills/api-debugging/"
@@ -45,7 +47,7 @@
       "repo": "https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp",
       "branch": "main",
       "pinnedCommit": "7d961f795d506fb30091161cb0b66bbf2547bd58",
-      "snapshotDate": "2026-03-30",
+      "commitDate": "2026-03-31",
       "lastVerified": "2026-04-03",
       "contentUsed": [
         ".mcp.json (tool names, auth model)",

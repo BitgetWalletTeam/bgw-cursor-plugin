@@ -1,5 +1,20 @@
 # Changelog
 
+## Current Upstream Pins
+
+> This section tracks the latest verified upstream commits used in this plugin.
+> For machine-readable data, see [`upstream.json`](upstream.json).
+> To check for drift: `bash scripts/check-upstream.sh`
+
+| Upstream Repo | Pinned Commit | Commit Date |
+|---------------|---------------|-------------|
+| bitget-wallet-skill | `2a4b6c5` | 2026-04-03 |
+| bitget-wallet-developer-skill | `34a02aa` | 2026-03-24 |
+| bitget-wallet-partner-skill | `05814bd` | 2026-03-31 |
+| bitget-wallet-mcp | `7d961f7` | 2026-03-31 |
+
+---
+
 ## [1.0.0] — 2026-03-30
 
 ### Added

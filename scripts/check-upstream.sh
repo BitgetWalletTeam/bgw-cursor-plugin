@@ -24,8 +24,8 @@ python3 -c "
 import json, sys
 data = json.load(open('$UPSTREAM_FILE'))
 for s in data['sources']:
-    print(f\"{s['name']}|{s['repo']}|{s['branch']}|{s['pinnedCommit']}|{s['lastVerified']}\")
-" | while IFS='|' read -r name repo branch pinned verified; do
+    print(f\"{s['name']}|{s['repo']}|{s['branch']}|{s['pinnedCommit']}|{s.get('commitDate','?')}\")
+" | while IFS='|' read -r name repo branch pinned commit_date; do
   TOTAL=$((TOTAL + 1))
   current=$(git ls-remote --refs "$repo" "refs/heads/$branch" 2>/dev/null | awk '{print $1}')
 
@@ -35,10 +35,10 @@ for s in data['sources']:
   fi
 
   if [ "$current" = "$pinned" ]; then
-    echo "  ✓ $name — up to date (pinned: ${pinned:0:7})"
+    echo "  ✓ $name — up to date (${pinned:0:7}, $commit_date)"
   else
     echo "  ✗ $name — DRIFT DETECTED"
-    echo "    pinned:  ${pinned:0:7} (verified: $verified)"
+    echo "    pinned:  ${pinned:0:7} ($commit_date)"
     echo "    current: ${current:0:7}"
     echo "    compare: ${repo}/compare/${pinned:0:7}...${current:0:7}"
     DRIFT_COUNT=$((DRIFT_COUNT + 1))
@@ -51,7 +51,7 @@ if [ "$UPDATE_FLAG" = "--update" ]; then
   echo "Updating upstream.json with current HEAD commits..."
 
   python3 - "$UPSTREAM_FILE" <<'PY'
-import json, subprocess, sys
+import json, subprocess, sys, os, tempfile, shutil
 from datetime import date
 
 path = sys.argv[1]
@@ -68,7 +68,26 @@ for source in data["sources"]:
             old = source["pinnedCommit"][:7]
             source["pinnedCommit"] = new_sha
             source["lastVerified"] = str(date.today())
-            print(f"  ✓ {source['name']}: {old} → {new_sha[:7]}")
+
+            # Fetch the actual commit date from the remote
+            tmpdir = tempfile.mkdtemp()
+            try:
+                subprocess.run(
+                    ["git", "clone", "--bare", "--filter=blob:none", "--single-branch",
+                     source["repo"], tmpdir + "/repo"],
+                    capture_output=True, text=True
+                )
+                log = subprocess.run(
+                    ["git", "-C", tmpdir + "/repo", "log", "-1", "--format=%ci", new_sha],
+                    capture_output=True, text=True
+                )
+                if log.returncode == 0 and log.stdout.strip():
+                    commit_date = log.stdout.strip().split(" ")[0]
+                    source["commitDate"] = commit_date
+            finally:
+                shutil.rmtree(tmpdir, ignore_errors=True)
+
+            print(f"  ✓ {source['name']}: {old} → {new_sha[:7]} ({source.get('commitDate', '?')})")
         else:
             print(f"  - {source['name']}: unchanged")
     else:
