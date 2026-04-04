@@ -8,5 +8,7 @@ __pycache__/
 .venv/
 .vscode/
 .idea/
+# Local Cursor / VS Code multi-root workspace (not committed)
+bgw-skills.code-workspace
 /tmp/
 *.tmp
