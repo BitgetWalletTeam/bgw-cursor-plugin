@@ -4,7 +4,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR" && pwd)"
 PLUGIN_NAME="bitget-wallet"
-PLUGIN_ID="${PLUGIN_NAME}@local"
+# Legacy manual registration (not loaded by current Claude Code); removed on install.
+LEGACY_PLUGIN_ID="${PLUGIN_NAME}@local"
+CLAUDE_MARKETPLACE_NAME="bitget-wallet-plugins"
+CLAUDE_PLUGIN_INSTALL_ID="${PLUGIN_NAME}@${CLAUDE_MARKETPLACE_NAME}"
 
 usage() {
   cat <<EOF
@@ -17,9 +20,9 @@ Usage:
   bash install.sh --help       Show this help
 
 Global install (default):
-  Registers the plugin in ~/.cursor/plugins/ so Cursor loads it in every
-  project you open. This is the recommended approach before the plugin is
-  listed on the Cursor marketplace.
+  - Cursor: symlinks this repo into ~/.cursor/plugins/bitget-wallet
+  - Claude Code: runs \`claude plugin marketplace add\` + \`claude plugin install\`
+    (uses .claude-plugin/marketplace.json — the supported load path)
 
 Project install (--project):
   Creates symlinks in the current working directory so the plugin is
@@ -31,20 +34,51 @@ EOF
 }
 
 # ---------------------------------------------------------------------------
-# Global install — register in ~/.cursor/plugins + ~/.claude config
+# Remove obsolete bitget-wallet@local entries (older install.sh never loaded in CC)
+# ---------------------------------------------------------------------------
+remove_legacy_bitget_local_registration() {
+  local claude_plugins="$HOME/.claude/plugins/installed_plugins.json"
+  local claude_settings="$HOME/.claude/settings.json"
+  python3 - "$claude_plugins" "$claude_settings" "$LEGACY_PLUGIN_ID" <<'PY'
+import json, os, sys
+ppath, spath, legacy = sys.argv[1], sys.argv[2], sys.argv[3]
+for path, mode in ((ppath, "plugins"), (spath, "settings")):
+    if not os.path.isfile(path):
+        continue
+    try:
+        with open(path) as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        continue
+    changed = False
+    if mode == "plugins":
+        pl = data.get("plugins")
+        if isinstance(pl, dict) and legacy in pl:
+            pl.pop(legacy, None)
+            changed = True
+    else:
+        ep = data.get("enabledPlugins")
+        if isinstance(ep, dict) and legacy in ep:
+            ep.pop(legacy, None)
+            changed = True
+    if changed:
+        with open(path, "w") as f:
+            json.dump(data, f, indent=2)
+PY
+}
+
+# ---------------------------------------------------------------------------
+# Global install — ~/.cursor/plugins symlink + Claude Code marketplace install
 # ---------------------------------------------------------------------------
 install_global() {
   local target="$HOME/.cursor/plugins/$PLUGIN_NAME"
-  local claude_dir="$HOME/.claude"
-  local claude_plugins="$claude_dir/plugins/installed_plugins.json"
-  local claude_settings="$claude_dir/settings.json"
 
   echo "=== Bitget Wallet Plugin — Global Install ==="
   echo "  Source: $REPO_ROOT"
   echo ""
 
-  # 1. Link plugin directory
-  echo "[1/3] Linking plugin into ~/.cursor/plugins/ ..."
+  # 1. Link plugin directory (Cursor)
+  echo "[1/2] Linking plugin into ~/.cursor/plugins/ ..."
   mkdir -p "$HOME/.cursor/plugins"
   if [ -L "$target" ]; then
     rm "$target"
@@ -56,55 +90,45 @@ install_global() {
   ln -s "$REPO_ROOT" "$target"
   echo "  ✓ $target → $REPO_ROOT"
 
-  # 2. Register in installed_plugins.json
-  echo "[2/3] Registering plugin..."
-  mkdir -p "$claude_dir/plugins"
-
-  python3 - "$claude_plugins" "$PLUGIN_ID" "$target" <<'PY'
-import json, os, sys
-path, pid, ipath = sys.argv[1], sys.argv[2], sys.argv[3]
-data = {}
-if os.path.exists(path):
-    try:
-        data = json.load(open(path))
-    except (json.JSONDecodeError, IOError):
-        data = {}
-plugins = data.setdefault("plugins", {})
-entries = [e for e in plugins.get(pid, [])
-           if not (isinstance(e, dict) and e.get("scope") == "user")]
-entries.insert(0, {"scope": "user", "installPath": ipath})
-plugins[pid] = entries
-json.dump(data, open(path, "w"), indent=2)
-PY
-  echo "  ✓ Registered in $claude_plugins"
-
-  # 3. Enable in settings.json
-  echo "[3/3] Enabling plugin..."
-
-  python3 - "$claude_settings" "$PLUGIN_ID" <<'PY'
-import json, os, sys
-path, pid = sys.argv[1], sys.argv[2]
-data = {}
-if os.path.exists(path):
-    try:
-        data = json.load(open(path))
-    except (json.JSONDecodeError, IOError):
-        data = {}
-data.setdefault("enabledPlugins", {})[pid] = True
-json.dump(data, open(path, "w"), indent=2)
-PY
-  echo "  ✓ Enabled in $claude_settings"
+  # 2. Claude Code — bundled marketplace (.claude-plugin/marketplace.json)
+  echo "[2/2] Claude Code plugin (marketplace) ..."
+  if command -v claude >/dev/null 2>&1; then
+    mkdir -p "$HOME/.claude/plugins"
+    local mp_out
+    mp_out="$(claude plugin marketplace add "$REPO_ROOT" 2>&1)" || true
+    if echo "$mp_out" | grep -q "Successfully added marketplace"; then
+      echo "  ✓ Registered marketplace $CLAUDE_MARKETPLACE_NAME"
+    elif echo "$mp_out" | grep -qi "already installed"; then
+      echo "  ✓ Marketplace $CLAUDE_MARKETPLACE_NAME already registered"
+    else
+      echo "  ⚠ marketplace add — check output:"
+      echo "$mp_out" | sed 's/^/    /'
+    fi
+    if claude plugin install "$CLAUDE_PLUGIN_INSTALL_ID" 2>&1; then
+      echo "  ✓ Installed $CLAUDE_PLUGIN_INSTALL_ID"
+    else
+      echo "  ⚠ Run manually: claude plugin install $CLAUDE_PLUGIN_INSTALL_ID"
+    fi
+    remove_legacy_bitget_local_registration
+  else
+    echo "  skipped (claude CLI not in PATH)"
+    echo ""
+    echo "  For Claude Code, run after installing the claude CLI:"
+    echo "    claude plugin marketplace add \"$REPO_ROOT\""
+    echo "    claude plugin install $CLAUDE_PLUGIN_INSTALL_ID"
+  fi
 
   echo ""
   echo "=== Installation Complete ==="
   echo ""
   echo "Next steps:"
   echo "  1. Restart Cursor (Cmd+Shift+P → 'Reload Window' or quit & reopen)"
-  echo "  2. In Cursor Settings → Features, enable 'Include third-party Plugins'"
+  echo "  2. Restart Claude Code (quit all sessions) so plugins reload"
+  echo "  3. Verify Claude:  claude plugin list  (expect $CLAUDE_PLUGIN_INSTALL_ID)"
+  echo "  4. In Cursor Settings → Features, enable 'Include third-party Plugins'"
   echo "     (if the toggle exists in your version)"
-  echo "  3. The plugin is now available in ALL your projects"
   echo ""
-  echo "To update later:  cd $REPO_ROOT && git pull"
+  echo "To update later:  cd $REPO_ROOT && git pull && bash install.sh"
   echo "To uninstall:     bash $REPO_ROOT/install.sh --uninstall"
 }
 
@@ -187,6 +211,12 @@ uninstall_global() {
 
   echo "=== Bitget Wallet Plugin — Uninstall (Global) ==="
 
+  if command -v claude >/dev/null 2>&1; then
+    claude plugin uninstall "$CLAUDE_PLUGIN_INSTALL_ID" 2>/dev/null || true
+    claude plugin marketplace remove "$CLAUDE_MARKETPLACE_NAME" 2>/dev/null || true
+    echo "  ✓ Claude Code: removed $CLAUDE_PLUGIN_INSTALL_ID / marketplace (if present)"
+  fi
+
   if [ -e "$target" ] || [ -L "$target" ]; then
     rm -rf "$target"
     echo "  ✓ Removed $target"
@@ -195,35 +225,43 @@ uninstall_global() {
   fi
 
   if [ -f "$claude_plugins" ]; then
-    python3 - "$claude_plugins" "$PLUGIN_ID" <<'PY'
+    python3 - "$claude_plugins" "$CLAUDE_PLUGIN_INSTALL_ID" "$LEGACY_PLUGIN_ID" <<'PY'
 import json, os, sys
-path, pid = sys.argv[1], sys.argv[2]
+path, pid1, pid2 = sys.argv[1], sys.argv[2], sys.argv[3]
 try:
     data = json.load(open(path))
-except:
+except Exception:
     exit(0)
-data.get("plugins", {}).pop(pid, None)
-json.dump(data, open(path, "w"), indent=2)
+pl = data.get("plugins")
+if isinstance(pl, dict):
+    pl.pop(pid1, None)
+    pl.pop(pid2, None)
+with open(path, "w") as f:
+    json.dump(data, f, indent=2)
 PY
-    echo "  ✓ Deregistered from installed_plugins.json"
+    echo "  ✓ Cleaned installed_plugins.json (if entries remained)"
   fi
 
   if [ -f "$claude_settings" ]; then
-    python3 - "$claude_settings" "$PLUGIN_ID" <<'PY'
+    python3 - "$claude_settings" "$CLAUDE_PLUGIN_INSTALL_ID" "$LEGACY_PLUGIN_ID" <<'PY'
 import json, os, sys
-path, pid = sys.argv[1], sys.argv[2]
+path, pid1, pid2 = sys.argv[1], sys.argv[2], sys.argv[3]
 try:
     data = json.load(open(path))
-except:
+except Exception:
     exit(0)
-data.get("enabledPlugins", {}).pop(pid, None)
-json.dump(data, open(path, "w"), indent=2)
+ep = data.get("enabledPlugins")
+if isinstance(ep, dict):
+    ep.pop(pid1, None)
+    ep.pop(pid2, None)
+with open(path, "w") as f:
+    json.dump(data, f, indent=2)
 PY
-    echo "  ✓ Disabled in settings.json"
+    echo "  ✓ Cleaned enabledPlugins (if entries remained)"
   fi
 
   echo ""
-  echo "Done. Restart Cursor to complete removal."
+  echo "Done. Restart Cursor and Claude Code to complete removal."
 }
 
 # ---------------------------------------------------------------------------

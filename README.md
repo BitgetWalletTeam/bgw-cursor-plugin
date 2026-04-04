@@ -28,24 +28,36 @@
 
 > **Platform:** Tested on macOS and Linux. Windows is not currently validated (symlinks and Bash paths may differ).
 
+> **Repository hosting (today):** For internal use, this plugin is cloned from GitLab — [`bgw-cursor-plugin`](https://gitlab.bitkeep.tools/front/front-ai/bgw-cursor-plugin). Clone URLs and `repository` fields in manifests point there for now.
+>
+> **After we publish to GitHub:** We will switch this README and related metadata (clone commands, manifest `repository`, etc.) to the public GitHub URLs in one pass. The skill rows in the table above refer to separate **upstream** GitHub repositories (source snapshots), not this bundled plugin repo.
+
 ### Option A: Global Install (Recommended)
 
-Install once → works in **every** Cursor project you open. No per-project setup.
+Install once → **Cursor:** every project. **Claude Code:** user-wide via marketplace (needs `claude` on `PATH` when you run the script).
 
 ```bash
-# 1. Clone the plugin repo (anywhere you like)
-git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git ~/bitget-wallet-plugin
+# 1. Clone (path can differ; adjust later commands)
+git clone https://gitlab.bitkeep.tools/front/front-ai/bgw-cursor-plugin.git ~/bgw-cursor-plugin
 
-# 2. Run the installer
-bash ~/bitget-wallet-plugin/install.sh
+# 2. Install
+bash ~/bgw-cursor-plugin/install.sh
 
-# 3. Restart Cursor (Cmd+Shift+P → "Reload Window" or quit & reopen)
+# 3–4. Restart Cursor and Claude Code so both reload plugins
 ```
 
-The installer registers the plugin in `~/.cursor/plugins/` and `~/.claude/` so Cursor loads it automatically. In Cursor Settings, search for "third-party" — if you see a toggle called **"Include third-party Plugins, Skills, and other configs"**, make sure it's enabled.
+**What `install.sh` does**
 
-**To update:** `cd ~/bitget-wallet-plugin && git pull`
-**To uninstall:** `bash ~/bitget-wallet-plugin/install.sh --uninstall`
+- **Cursor:** Symlink `~/.cursor/plugins/bitget-wallet` → your clone.
+- **Claude Code:** `claude plugin marketplace add <repo>` then `claude plugin install bitget-wallet@bitget-wallet-plugins` using [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json). The enabled plugin is copied into `~/.claude/plugins/cache/` (not loaded from the symlink alone). If `claude` is missing from `PATH`, the script prints those two commands to run by hand.
+
+**Ad-hoc (one session only):** `claude --plugin-dir /path/to/bgw-cursor-plugin` — no substitute for marketplace install if you want skills every session.
+
+**Cursor Settings:** Search for **third-party** and enable **Include third-party Plugins, Skills, and other configs** if your build shows that toggle.
+
+**To update:** `cd ~/bgw-cursor-plugin && git pull && bash install.sh` (refreshes Claude’s cached copy).
+
+**To uninstall:** `bash ~/bgw-cursor-plugin/install.sh --uninstall`
 
 ### Option B: Single-Project Install
 
@@ -54,7 +66,7 @@ For when you only want the plugin in one specific project.
 ```bash
 # 1. Clone into your project (as a hidden subdirectory)
 cd your-project
-git clone https://github.com/bitget-wallet-ai-lab/bitget-wallet.git .bitget-wallet
+git clone https://gitlab.bitkeep.tools/front/front-ai/bgw-cursor-plugin.git .bitget-wallet
 
 # 2. Create workspace-level symlinks
 bash .bitget-wallet/install.sh --project
@@ -62,7 +74,7 @@ bash .bitget-wallet/install.sh --project
 # 3. Add the symlinks to .gitignore (the installer prints the list)
 ```
 
-This creates symlinks (`.cursor-plugin/`, `skills/`, `rules/`, etc.) at your project root pointing into `.bitget-wallet/`. Cursor discovers them when you open the project.
+This creates symlinks (`.cursor-plugin/`, `skills/`, `rules/`, etc.) at your project root pointing into `.bitget-wallet/`. Cursor discovers them when you open the project. **Claude Code** does not use those symlinks by itself — either run **Option A** once for a global Claude install, or use `claude --plugin-dir /path/to/your-project/.bitget-wallet` when working in that repo.
 
 > **Note:** If your project already has files like `skills/`, `rules/`, `scripts/`, `.mcp.json`, or `CLAUDE.md`, the installer skips them to avoid overwriting. Check the output for any `Skipped` entries — if core items like `.cursor-plugin` or `skills` are skipped, use Option A (global install) instead.
 
@@ -70,17 +82,20 @@ This creates symlinks (`.cursor-plugin/`, `skills/`, `rules/`, etc.) at your pro
 
 ### Verify Installation
 
-After installing and restarting Cursor, the plugin loads silently — **it will not appear in the Extensions panel or the marketplace**. That's expected for local plugins.
+Local plugins **do not** show up in Cursor’s Extensions marketplace — that is expected.
 
-To confirm it's working, open any project in Cursor and ask the Agent:
+**Cursor:** Restart after `install.sh`, confirm third-party toggle (see Option A), then ask the Agent e.g. *“What Bitget Wallet skills do you have?”* — expect all 7 skill areas to be recognized.
 
-> "What Bitget Wallet skills do you have?"
+**Claude Code:** `claude plugin list` must show **`bitget-wallet@bitget-wallet-plugins`** enabled. If empty, re-run `bash install.sh` from your clone (with `claude` on `PATH`), or:
 
-The Agent should list all 7 skills (DeFi Trading, Token Analysis, Social Wallet, etc.). If it doesn't recognize the question, check:
+```bash
+claude plugin marketplace add /path/to/bgw-cursor-plugin
+claude plugin install bitget-wallet@bitget-wallet-plugins
+```
 
-1. You restarted Cursor after running `install.sh`
-2. In Cursor Settings, search for "third-party" — if you see a toggle called **"Include third-party Plugins, Skills, and other configs"**, make sure it's enabled (some versions may not show this toggle)
-3. Run `cat ~/.claude/settings.json | grep bitget` — should show `"bitget-wallet@local": true`
+Hand-edited `bitget-wallet@local` entries in `settings.json` / `installed_plugins.json` are **not** a supported load path in current Claude Code.
+
+Optional: `claude plugin validate /path/to/clone` (or the `~/.cursor/plugins/bitget-wallet` symlink) should pass. Namespaced slash commands often look like `bitget-wallet:…`; check `/help` after restart.
 
 ### Try It
 
@@ -95,7 +110,7 @@ Once verified, try these prompts:
 
 ```bash
 # CLI tools (swap signing, key management)
-cd ~/bitget-wallet-plugin   # or .bitget-wallet for project install
+cd ~/bgw-cursor-plugin   # or .bitget-wallet for project install
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -114,15 +129,6 @@ Cursor reads `.mcp.json` automatically. The agent can then call tools like `swap
 
 > If you prefer `pip install bitget-wallet-mcp` instead of `uvx`, update `.mcp.json` to use `{"command": "bitget-wallet-mcp", "args": []}` so Cursor invokes the pip-installed binary.
 
-### Claude Code
-
-```bash
-# Claude Code uses --plugin-dir for local plugins
-claude --plugin-dir ~/bitget-wallet-plugin
-```
-
-Claude Code detects `.claude-plugin/plugin.json` and loads all skills and agents. `CLAUDE.md` provides project context. MCP tools are configured via `.mcp.json`.
-
 ### What Works Without MCP or CLI?
 
 Even without installing MCP or Python dependencies, the plugin provides:
@@ -135,11 +141,14 @@ The agent can answer questions, generate code, and guide you through workflows u
 
 ## Repository Structure
 
+Two manifests describe the same tree: **Cursor** uses `.cursor-plugin/plugin.json` (may include `rules`, `tags`, etc.); **Claude Code** uses `.claude-plugin/plugin.json` (stricter schema) plus `.claude-plugin/marketplace.json` for CLI install.
+
 ```
 .cursor-plugin/
   plugin.json              # Cursor plugin manifest
 .claude-plugin/
-  plugin.json              # Claude Code plugin manifest
+  plugin.json              # Claude Code manifest (stricter than .cursor-plugin)
+  marketplace.json         # Catalog for `claude plugin marketplace add` / install
 skills/
   defi-trading/            # Swap, bridge, gasless — 8 chains
     SKILL.md
@@ -202,10 +211,7 @@ The `bitget-wallet-mcp` server provides **36 tools** across 5 categories. No API
 | Swap | 7 | `swap_quote`, `swap_confirm`, `swap_make_order`, `swap_send` |
 | Balance | 1 | `balance` |
 
-Install (requires [`uv`](https://docs.astral.sh/uv/getting-started/installation/) — the shipped `.mcp.json` uses `uvx`):
-```bash
-uvx bitget-wallet-mcp
-```
+Install and run the server with [`uv`](https://docs.astral.sh/uv/getting-started/installation/) / `uvx` — see **Optional: Python CLI & MCP Tools** above (same `.mcp.json` entry Cursor uses).
 
 ## Upstream Sources
 
@@ -251,11 +257,9 @@ This plugin uses a **progressive disclosure** pattern:
 ## Links
 
 - [Bitget Wallet](https://web3.bitget.com)
-- [Wallet Skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill)
-- [Developer Skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill)
-- [Wallet MCP Server](https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp)
-- [Partner Skill](https://github.com/bitget-wallet-ai-lab/bitget-wallet-partner-skill)
-- [Wallet CLI](https://github.com/bitget-wallet-ai-lab/bitget-wallet-cli)
+- [Wallet CLI](https://github.com/bitget-wallet-ai-lab/bitget-wallet-cli) (optional; plugin ships its own `scripts/`)
+
+Upstream repos for bundled skills and MCP are linked in **What This Plugin Does** and **Upstream Sources**.
 
 ## License
 
