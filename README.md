@@ -26,6 +26,8 @@
 
 ## Quick Start
 
+> **Platform:** Tested on macOS and Linux. Windows is not currently validated (symlinks and Bash paths may differ).
+
 ### Option A: Global Install (Recommended)
 
 Install once → works in **every** Cursor project you open. No per-project setup.
@@ -62,6 +64,8 @@ bash .bitget-wallet/install.sh --project
 
 This creates symlinks (`.cursor-plugin/`, `skills/`, `rules/`, etc.) at your project root pointing into `.bitget-wallet/`. Cursor discovers them when you open the project.
 
+> **Note:** If your project already has files like `skills/`, `rules/`, `scripts/`, `.mcp.json`, or `CLAUDE.md`, the installer skips them to avoid overwriting. Check the output for any `Skipped` entries — if core items like `.cursor-plugin` or `skills` are skipped, use Option A (global install) instead.
+
 **To remove:** `bash .bitget-wallet/install.sh --uninstall-project`
 
 ### Verify Installation
@@ -94,12 +98,21 @@ Once verified, try these prompts:
 cd ~/bitget-wallet-plugin   # or .bitget-wallet for project install
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+```
 
-# MCP server (36 tools, no API key needed)
-pip install bitget-wallet-mcp
+To enable MCP tools (36 tools, no API key needed), the shipped `.mcp.json` launches MCP via `uvx`, which requires [`uv`](https://docs.astral.sh/uv/getting-started/installation/):
+
+```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Verify — this is how .mcp.json starts the MCP server
+uvx bitget-wallet-mcp
 ```
 
 Cursor reads `.mcp.json` automatically. The agent can then call tools like `swap_quote`, `balance`, `security_audit` directly.
+
+> If you prefer `pip install bitget-wallet-mcp` instead of `uvx`, update `.mcp.json` to use `{"command": "bitget-wallet-mcp", "args": []}` so Cursor invokes the pip-installed binary.
 
 ### Claude Code
 
@@ -188,10 +201,8 @@ The `bitget-wallet-mcp` server provides **36 tools** across 5 categories. No API
 | Swap | 7 | `swap_quote`, `swap_confirm`, `swap_make_order`, `swap_send` |
 | Balance | 1 | `balance` |
 
-Install:
+Install (requires [`uv`](https://docs.astral.sh/uv/getting-started/installation/) — the shipped `.mcp.json` uses `uvx`):
 ```bash
-pip install bitget-wallet-mcp
-# or
 uvx bitget-wallet-mcp
 ```
 
