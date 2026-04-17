@@ -38,4 +38,3 @@
 - **MCP configuration** for `bitget-wallet-mcp` server
 - **7 Python scripts** from bitget-wallet-skill for CLI-based operations
 - `CLAUDE.md` for Claude Code project context
-- `reviews/REVIEW-v1.0.md` with initial review and fix log

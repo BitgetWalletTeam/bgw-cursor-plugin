@@ -28,17 +28,13 @@
 
 > **Platform:** Tested on macOS and Linux. Windows is not currently validated (symlinks and Bash paths may differ).
 
-> **Repository hosting (today):** For internal use, this plugin is cloned from GitLab — [`bgw-cursor-plugin`](https://gitlab.bitkeep.tools/front/front-ai/bgw-cursor-plugin). Clone URLs and `repository` fields in manifests point there for now.
->
-> **After we publish to GitHub:** We will switch this README and related metadata (clone commands, manifest `repository`, etc.) to the public GitHub URLs in one pass. The skill rows in the table above refer to separate **upstream** GitHub repositories (source snapshots), not this bundled plugin repo.
-
 ### Option A: Global Install (Recommended)
 
 Install once → **Cursor:** every project. **Claude Code:** user-wide via marketplace (needs `claude` on `PATH` when you run the script).
 
 ```bash
 # 1. Clone (path can differ; adjust later commands)
-git clone https://gitlab.bitkeep.tools/front/front-ai/bgw-cursor-plugin.git ~/bgw-cursor-plugin
+git clone https://github.com/BitgetWalletTeam/bgw-cursor-plugin.git ~/bgw-cursor-plugin
 
 # 2. Install
 bash ~/bgw-cursor-plugin/install.sh
@@ -66,7 +62,7 @@ For when you only want the plugin in one specific project.
 ```bash
 # 1. Clone into your project (as a hidden subdirectory)
 cd your-project
-git clone https://gitlab.bitkeep.tools/front/front-ai/bgw-cursor-plugin.git .bitget-wallet
+git clone https://github.com/BitgetWalletTeam/bgw-cursor-plugin.git .bitget-wallet
 
 # 2. Create workspace-level symlinks
 bash .bitget-wallet/install.sh --project
@@ -192,11 +188,6 @@ install.sh                 # Plugin installer (global / per-project)
 upstream.json              # Pinned upstream commit SHAs for drift detection
 CLAUDE.md                  # Claude Code project context
 CHANGELOG.md               # Version history
-reviews/                   # Audit & review artifacts (not part of plugin)
-  SUBMISSION-REVIEW.md     # Main submission document
-  security-audit-slowmist-v1.0.md
-  REVIEW-v1.0.md
-  AUDIT-REPORT-v1.*.md    # Independent audit reports (v1.0–v1.13)
 ```
 
 ## MCP Tools

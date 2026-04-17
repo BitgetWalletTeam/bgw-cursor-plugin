@@ -8,7 +8,7 @@
     "email": "AiAgent@bitget.com"
   },
   "homepage": "https://web3.bitget.com",
-  "repository": "https://gitlab.bitkeep.tools/front/front-ai/bgw-cursor-plugin",
+  "repository": "https://github.com/BitgetWalletTeam/bgw-cursor-plugin",
   "license": "MIT",
   "logo": "assets/logo.svg",
   "keywords": [
