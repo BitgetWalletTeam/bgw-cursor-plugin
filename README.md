@@ -34,7 +34,7 @@ Install once → **Cursor:** every project. **Claude Code:** user-wide via marke
 
 ```bash
 # 1. Clone (path can differ; adjust later commands)
-git clone https://github.com/BitgetWalletTeam/bgw-cursor-plugin.git ~/bgw-cursor-plugin
+git clone https://github.com/bitget-wallet-ai-lab/bgw-cursor-plugin.git ~/bgw-cursor-plugin
 
 # 2. Install
 bash ~/bgw-cursor-plugin/install.sh
@@ -62,7 +62,7 @@ For when you only want the plugin in one specific project.
 ```bash
 # 1. Clone into your project (as a hidden subdirectory)
 cd your-project
-git clone https://github.com/BitgetWalletTeam/bgw-cursor-plugin.git .bitget-wallet
+git clone https://github.com/bitget-wallet-ai-lab/bgw-cursor-plugin.git .bitget-wallet
 
 # 2. Create workspace-level symlinks
 bash .bitget-wallet/install.sh --project
