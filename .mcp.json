@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "bitget-wallet-mcp": {
+      "command": "uvx",
+      "args": ["bitget-wallet-mcp"]
+    }
+  }
+}

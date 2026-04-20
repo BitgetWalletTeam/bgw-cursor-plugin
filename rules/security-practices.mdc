@@ -1,0 +1,15 @@
+---
+description: Security constraints for DApp code interacting with Bitget Wallet. Prevents common vulnerabilities in wallet integration code.
+alwaysApply: true
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.py"]
+---
+
+- Never hardcode private keys, mnemonics, or API secrets in source code
+- Never store wallet credentials in localStorage or sessionStorage
+- Store sensitive config (WalletConnect Project ID, RPC keys) in environment variables via `.env`
+- Always validate contract addresses against known token lists before interaction
+- Token approval: use exact required amount, never unlimited (MaxUint256), unless user explicitly requests
+- Always show transaction details (amount, recipient, gas estimate) before requesting user signature
+- Cross-chain operations: verify destination chain ID and address format match
+- Wrap all provider calls in try/catch with typed error handling (4001 = user rejected, 4100 = unauthorized, -32603 = internal error)
+- Never suppress or silently swallow wallet errors — always surface them to the user

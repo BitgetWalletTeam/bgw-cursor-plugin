@@ -1,0 +1,60 @@
+{
+  "_comment": "Pinned upstream commits used to build this plugin. Run 'bash scripts/check-upstream.sh' to detect drift.",
+  "lastVerified": "2026-04-03",
+  "sources": [
+    {
+      "name": "bitget-wallet-skill",
+      "repo": "https://github.com/bitget-wallet-ai-lab/bitget-wallet-skill",
+      "branch": "main",
+      "pinnedCommit": "2a4b6c5b19b21472cb4cd27eb0f8ecef988c3b9a",
+      "commitDate": "2026-04-03",
+      "lastVerified": "2026-04-03",
+      "contentUsed": [
+        "skills/defi-trading/",
+        "skills/token-analysis/",
+        "skills/social-wallet/",
+        "skills/rwa-trading/",
+        "skills/x402-payments/",
+        "scripts/*.py"
+      ]
+    },
+    {
+      "name": "bitget-wallet-developer-skill",
+      "repo": "https://github.com/bitget-wallet-ai-lab/bitget-wallet-developer-skill",
+      "branch": "main",
+      "pinnedCommit": "34a02aa9fa87ea2bfdd52e49c5939e4890874f76",
+      "commitDate": "2026-03-24",
+      "lastVerified": "2026-04-03",
+      "contentUsed": [
+        "skills/dapp-integration/ (from bitget-wallet-developer-skill/skill/)",
+        "skills/dapp-integration/references/dapp-*.md (10 files, from dapp-common-skill/skill/references/)"
+      ],
+      "_note": "This repo contains both bitget-wallet-developer-skill/ and dapp-common-skill/ as subdirectories. dapp-common-skill does not have a separate GitHub repo."
+    },
+    {
+      "name": "bitget-wallet-partner-skill",
+      "repo": "https://github.com/bitget-wallet-ai-lab/bitget-wallet-partner-skill",
+      "branch": "main",
+      "pinnedCommit": "05814bdace14fe947448318a220fde00742040ae",
+      "commitDate": "2026-03-31",
+      "lastVerified": "2026-04-03",
+      "contentUsed": [
+        "skills/api-debugging/"
+      ]
+    },
+    {
+      "name": "bitget-wallet-mcp",
+      "repo": "https://github.com/bitget-wallet-ai-lab/bitget-wallet-mcp",
+      "branch": "main",
+      "pinnedCommit": "7d961f795d506fb30091161cb0b66bbf2547bd58",
+      "commitDate": "2026-03-31",
+      "lastVerified": "2026-04-03",
+      "contentUsed": [
+        ".mcp.json (tool names, auth model)",
+        "skills/defi-trading/SKILL.md (MCP tool table)",
+        "agents/defi-operator.md (MCP tool refs)",
+        "rules/swap-safety.mdc (MCP tool refs)"
+      ]
+    }
+  ]
+}

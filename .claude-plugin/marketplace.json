@@ -1,0 +1,18 @@
+{
+  "name": "bitget-wallet-plugins",
+  "owner": {
+    "name": "Bitget Wallet AI Lab",
+    "url": "https://github.com/bitget-wallet-ai-lab"
+  },
+  "metadata": {
+    "description": "Bitget Wallet plugin for Claude Code (bundle: skills, agents, MCP)"
+  },
+  "plugins": [
+    {
+      "name": "bitget-wallet",
+      "source": "./",
+      "description": "Multi-chain DeFi tools & DApp code generation for Bitget Wallet — swap, bridge, token analysis across 8+ chains",
+      "version": "1.0.0"
+    }
+  ]
+}
